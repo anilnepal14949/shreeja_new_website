@@ -195,6 +195,10 @@ export interface Project {
   category: string;
   image: string;
   href: string;
+  client?: string;
+  timeline?: string;
+  challenge?: string;
+  approach?: string;
 }
 
 export const projects: Project[] = [

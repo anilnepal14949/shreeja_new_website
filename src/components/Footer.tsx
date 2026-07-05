@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react";
 import SocialIcon, { type SocialPlatform } from "./shared/SocialIcon";
+import { usePathname } from "next/navigation";
 import { offices } from "@/utils/constants";
 import { useParallax } from "@/hooks/useParallax";
 
@@ -26,9 +27,14 @@ const socials: { platform: SocialPlatform; href: string; label: string }[] = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
   const footerRef = useRef<HTMLElement>(null);
   // Parallax drift translation offset
   const y = useParallax(footerRef, -0.25);
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <footer ref={footerRef} className="w-full bg-shreeja-navy-dark pt-16 pb-0 text-white/80 overflow-hidden">

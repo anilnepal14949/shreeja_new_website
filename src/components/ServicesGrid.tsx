@@ -1,19 +1,38 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Code2, Smartphone, PenTool, Megaphone, Fingerprint, TrendingUp, type LucideIcon } from "lucide-react";
 import { services } from "@/utils/constants";
+
+export const lucideIconMap: Record<string, LucideIcon> = {
+  Code2,
+  Smartphone,
+  PenTool,
+  Megaphone,
+  Fingerprint,
+  TrendingUp,
+};
 
 const easeOut = [0.25, 0.46, 0.45, 0.94] as const;
 
 export default function ServicesGrid() {
+  const [items, setItems] = useState<any[]>(services);
+
+  useEffect(() => {
+    const local = localStorage.getItem("shreeja_services");
+    if (local) {
+      setTimeout(() => setItems(JSON.parse(local)), 0);
+    }
+  }, []);
+
   return (
     <section id="services" className="w-full bg-shreeja-navy-dark py-24 text-white">
       <div className="mx-auto max-w-5xl divide-y divide-white/10 border-y border-white/10 px-6">
-        {services.map((service, i) => {
+        {items.map((service, i) => {
           const isRight = i % 2 === 1;
-          const Icon = service.icon;
+          const Icon = typeof service.icon === "string" ? lucideIconMap[service.icon] || Code2 : service.icon;
           return (
             <motion.div
               key={service.title}
@@ -50,7 +69,7 @@ export default function ServicesGrid() {
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {service.tags.map((tag) => (
+                  {service.tags.map((tag: string) => (
                     <span
                       key={tag}
                       className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-body text-xs font-medium text-white/50"
@@ -59,16 +78,15 @@ export default function ServicesGrid() {
                     </span>
                   ))}
                 </div>
+              </div>
 
+              <div className={`flex flex-1 justify-end md:w-auto ${isRight ? "md:justify-start" : "md:justify-end"}`}>
                 <Link
                   href={`/services/${service.slug}`}
-                  className="mt-6 inline-flex items-center gap-1.5 font-body text-sm font-medium text-shreeja-orange transition-colors duration-200 hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 font-body text-xs font-semibold text-white transition-all duration-300 hover:border-shreeja-orange hover:bg-shreeja-orange hover:text-white"
                 >
-                  Explore service
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-200 group-hover:translate-x-1"
-                  />
+                  Learn More
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
             </motion.div>

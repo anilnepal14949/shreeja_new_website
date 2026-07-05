@@ -6,10 +6,22 @@ import { ArrowLeft, CheckCircle2, ArrowRight } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import ContactForm from "@/components/ContactForm";
 import { services, projects } from "@/utils/constants";
+import fs from "fs";
+import path from "path";
 
 type Params = Promise<{ slug: string }>;
 
 export async function generateStaticParams() {
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.services) {
+      return db.services.map((service: any) => ({
+        slug: service.slug,
+      }));
+    }
+  } catch {}
   return services.map((service) => ({
     slug: service.slug,
   }));
@@ -17,7 +29,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const service = services.find((s) => s.slug === slug);
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  let allServices = services;
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.services) {
+      allServices = db.services;
+    }
+  } catch {}
+
+  const service = allServices.find((s) => s.slug === slug);
   if (!service) return {};
 
   return {
@@ -92,7 +114,22 @@ const serviceFeaturesMap: Record<string, { subtitle: string; points: string[] }>
 
 export default async function ServiceDetailPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const service = services.find((s) => s.slug === slug);
+  
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  let allServices = services;
+  let allProjects = projects;
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.services) {
+      allServices = db.services;
+    }
+    if (db.projects) {
+      allProjects = db.projects;
+    }
+  } catch {}
+
+  const service = allServices.find((s) => s.slug === slug);
   if (!service) {
     notFound();
   }
@@ -107,7 +144,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
   };
 
   // Find some relevant portfolio projects (or fallback to general ones)
-  const relatedProjects = projects.slice(0, 3);
+  const relatedProjects = allProjects.slice(0, 3);
 
   return (
     <div className="w-full">

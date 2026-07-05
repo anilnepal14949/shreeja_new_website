@@ -1,9 +1,19 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Code2, Smartphone, PenTool, Megaphone, Fingerprint, TrendingUp, type LucideIcon } from "lucide-react";
 import { services } from "@/utils/constants";
+
+export const lucideIconMap: Record<string, LucideIcon> = {
+  Code2,
+  Smartphone,
+  PenTool,
+  Megaphone,
+  Fingerprint,
+  TrendingUp,
+};
 
 const container = {
   hidden: {},
@@ -20,7 +30,17 @@ const item = {
 };
 
 export default function ServicesTeaser() {
-  const featured = services.slice(0, 3);
+  const [featured, setFeatured] = useState<any[]>(services.slice(0, 3));
+
+  useEffect(() => {
+    const local = localStorage.getItem("shreeja_services");
+    if (local) {
+      setTimeout(() => {
+        const parsed = JSON.parse(local);
+        setFeatured(parsed.slice(0, 3));
+      }, 0);
+    }
+  }, []);
 
   return (
     <section className="w-full border-t border-shreeja-navy/10 bg-shreeja-light py-24">
@@ -41,25 +61,28 @@ export default function ServicesTeaser() {
           viewport={{ once: true, amount: 0.2 }}
           className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3"
         >
-          {featured.map(({ icon: Icon, title, description }) => (
-            <motion.div
-              key={title}
-              variants={item}
-              whileHover={{ y: -6 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="group flex flex-col rounded-lg border border-shreeja-navy/10 bg-white p-8 shadow-sm transition-shadow duration-200 hover:shadow-xl hover:shadow-shreeja-navy/10"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-shreeja-orange/10 text-shreeja-orange transition-colors duration-200 group-hover:bg-shreeja-orange group-hover:text-white">
-                <Icon size={24} />
-              </div>
-              <h3 className="mt-6 font-display text-xl font-semibold text-shreeja-navy">
-                {title}
-              </h3>
-              <p className="mt-2 font-body text-sm font-normal text-shreeja-dark/70">
-                {description}
-              </p>
-            </motion.div>
-          ))}
+          {featured.map(({ icon, title, description }) => {
+            const Icon = typeof icon === "string" ? lucideIconMap[icon] || Code2 : icon;
+            return (
+              <motion.div
+                key={title}
+                variants={item}
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="group flex flex-col rounded-lg border border-shreeja-navy/10 bg-white p-8 shadow-sm transition-shadow duration-200 hover:shadow-xl hover:shadow-shreeja-navy/10"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-shreeja-orange/10 text-shreeja-orange transition-colors duration-200 group-hover:bg-shreeja-orange group-hover:text-white">
+                  <Icon size={24} />
+                </div>
+                <h3 className="mt-6 font-display text-xl font-semibold text-shreeja-navy">
+                  {title}
+                </h3>
+                <p className="mt-2 font-body text-sm font-normal text-shreeja-dark/70">
+                  {description}
+                </p>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         <div className="mt-14 flex justify-center">

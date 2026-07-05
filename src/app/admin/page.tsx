@@ -19,6 +19,7 @@ import {
   ExternalLink,
   ChevronRight,
   TrendingUp,
+  Cpu,
   X
 } from "lucide-react";
 
@@ -28,6 +29,10 @@ interface Project {
   category: string;
   image: string;
   href: string;
+  client?: string;
+  timeline?: string;
+  challenge?: string;
+  approach?: string;
 }
 
 interface BlogPost {
@@ -38,6 +43,16 @@ interface BlogPost {
   readTime: string;
   image: string;
   content?: string;
+}
+
+interface Service {
+  number: string;
+  slug: string;
+  icon: string;
+  title: string;
+  description: string;
+  detail: string;
+  tags: string[];
 }
 
 interface Inquiry {
@@ -52,7 +67,7 @@ interface Inquiry {
   read: boolean;
 }
 
-type TabType = "overview" | "portfolio" | "blogs" | "inquiries";
+type TabType = "overview" | "portfolio" | "blogs" | "services" | "inquiries";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -62,6 +77,7 @@ export default function AdminDashboardPage() {
   // Database states
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [servicesList, setServicesList] = useState<Service[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
   // Modal control states
@@ -73,13 +89,21 @@ export default function AdminDashboardPage() {
     slug: string;
     category: string;
     image: string;
+    client: string;
+    timeline: string;
+    challenge: string;
+    approach: string;
   }>({
     open: false,
     mode: "add",
     title: "",
     slug: "",
-    category: "",
-    image: ""
+    category: "Web Development",
+    image: "",
+    client: "",
+    timeline: "",
+    challenge: "",
+    approach: ""
   });
 
   const [blogModal, setBlogModal] = useState<{
@@ -105,6 +129,29 @@ export default function AdminDashboardPage() {
     content: ""
   });
 
+  const [serviceModal, setServiceModal] = useState<{
+    open: boolean;
+    mode: "add" | "edit";
+    index?: number;
+    number: string;
+    slug: string;
+    icon: string;
+    title: string;
+    description: string;
+    detail: string;
+    tagsString: string;
+  }>({
+    open: false,
+    mode: "add",
+    number: "",
+    slug: "",
+    icon: "Code2",
+    title: "",
+    description: "",
+    detail: "",
+    tagsString: ""
+  });
+
   const [inquiryModal, setInquiryModal] = useState<{
     open: boolean;
     inquiry: Inquiry | null;
@@ -124,6 +171,7 @@ export default function AdminDashboardPage() {
         // Sync local storage if present, or initialize
         const localProjects = localStorage.getItem("shreeja_projects");
         const localBlogs = localStorage.getItem("shreeja_blogs");
+        const localServices = localStorage.getItem("shreeja_services");
         const localInquiries = localStorage.getItem("shreeja_inquiries");
 
         if (localProjects) setProjects(JSON.parse(localProjects) as Project[]);
@@ -138,6 +186,12 @@ export default function AdminDashboardPage() {
           localStorage.setItem("shreeja_blogs", JSON.stringify(db.blogs || []));
         }
 
+        if (localServices) setServicesList(JSON.parse(localServices) as Service[]);
+        else {
+          setServicesList(db.services || []);
+          localStorage.setItem("shreeja_services", JSON.stringify(db.services || []));
+        }
+
         if (localInquiries) setInquiries(JSON.parse(localInquiries) as Inquiry[]);
         else {
           setInquiries(db.inquiries || []);
@@ -148,10 +202,12 @@ export default function AdminDashboardPage() {
       // Offline / LocalStorage only mode
       const localProjects = localStorage.getItem("shreeja_projects");
       const localBlogs = localStorage.getItem("shreeja_blogs");
+      const localServices = localStorage.getItem("shreeja_services");
       const localInquiries = localStorage.getItem("shreeja_inquiries");
 
       if (localProjects) setProjects(JSON.parse(localProjects) as Project[]);
       if (localBlogs) setBlogs(JSON.parse(localBlogs) as BlogPost[]);
+      if (localServices) setServicesList(JSON.parse(localServices) as Service[]);
       if (localInquiries) setInquiries(JSON.parse(localInquiries) as Inquiry[]);
     } finally {
       setLoading(false);
@@ -172,17 +228,18 @@ export default function AdminDashboardPage() {
 
   // Sync to backend file system (optional) and localstorage (mandatory for demos)
   const saveState = async (
-    type: "projects" | "blogs" | "inquiries",
-    updatedData: Project[] | BlogPost[] | Inquiry[]
+    type: "projects" | "blogs" | "services" | "inquiries",
+    updatedData: Project[] | BlogPost[] | Service[] | Inquiry[]
   ) => {
     // 1. Sync LocalStorage immediately
     localStorage.setItem(`shreeja_${type}`, JSON.stringify(updatedData));
 
     // 2. Sync to API route handler
     try {
-      const actionMap: Record<"projects" | "blogs" | "inquiries", string> = {
+      const actionMap: Record<"projects" | "blogs" | "services" | "inquiries", string> = {
         projects: "saveProjects",
         blogs: "saveBlogs",
+        services: "saveServices",
         inquiries: "saveInquiries"
       };
 
@@ -211,8 +268,12 @@ export default function AdminDashboardPage() {
       mode: "add",
       title: "",
       slug: "",
-      category: "",
-      image: ""
+      category: "Web Development",
+      image: "",
+      client: "",
+      timeline: "",
+      challenge: "",
+      approach: ""
     });
   };
 
@@ -225,7 +286,11 @@ export default function AdminDashboardPage() {
       title: p.title,
       slug: p.slug,
       category: p.category,
-      image: p.image
+      image: p.image,
+      client: p.client || "",
+      timeline: p.timeline || "",
+      challenge: p.challenge || "",
+      approach: p.approach || ""
     });
   };
 
@@ -237,7 +302,11 @@ export default function AdminDashboardPage() {
       slug: slugified,
       category: projectModal.category,
       image: projectModal.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-      href: `/portfolio/${slugified}`
+      href: `/portfolio/${slugified}`,
+      client: projectModal.client,
+      timeline: projectModal.timeline,
+      challenge: projectModal.challenge,
+      approach: projectModal.approach
     };
 
     let updatedProjects = [...projects];
@@ -257,6 +326,70 @@ export default function AdminDashboardPage() {
       const updatedProjects = projects.filter((_, i) => i !== index);
       setProjects(updatedProjects);
       saveState("projects", updatedProjects);
+    }
+  };
+
+  // --- Services CRUD operations ---
+  const handleAddService = () => {
+    setServiceModal({
+      open: true,
+      mode: "add",
+      number: String(servicesList.length + 1).padStart(2, "0"),
+      slug: "",
+      icon: "Code2",
+      title: "",
+      description: "",
+      detail: "",
+      tagsString: ""
+    });
+  };
+
+  const handleEditService = (index: number) => {
+    const s = servicesList[index];
+    setServiceModal({
+      open: true,
+      mode: "edit",
+      index,
+      number: s.number,
+      slug: s.slug,
+      icon: s.icon,
+      title: s.title,
+      description: s.description,
+      detail: s.detail,
+      tagsString: s.tags.join(", ")
+    });
+  };
+
+  const handleSaveService = (e: React.FormEvent) => {
+    e.preventDefault();
+    const slugified = serviceModal.slug || serviceModal.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const updatedService: Service = {
+      number: serviceModal.number,
+      slug: slugified,
+      icon: serviceModal.icon,
+      title: serviceModal.title,
+      description: serviceModal.description,
+      detail: serviceModal.detail,
+      tags: serviceModal.tagsString.split(",").map(t => t.trim()).filter(Boolean)
+    };
+
+    let updatedServices = [...servicesList];
+    if (serviceModal.mode === "add") {
+      updatedServices = [...servicesList, updatedService];
+    } else if (serviceModal.mode === "edit" && serviceModal.index !== undefined) {
+      updatedServices[serviceModal.index] = updatedService;
+    }
+
+    setServicesList(updatedServices);
+    saveState("services", updatedServices);
+    setServiceModal({ ...serviceModal, open: false });
+  };
+
+  const handleDeleteService = (index: number) => {
+    if (confirm("Are you sure you want to delete this service?")) {
+      const updatedServices = servicesList.filter((_, i) => i !== index);
+      setServicesList(updatedServices);
+      saveState("services", updatedServices);
     }
   };
 
@@ -430,6 +563,18 @@ export default function AdminDashboardPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab("services")}
+            className={`flex items-center gap-4 rounded-lg px-4 py-3.5 font-body text-sm font-semibold tracking-wide transition-all ${
+              activeTab === "services"
+                ? "bg-shreeja-orange text-white shadow-lg shadow-shreeja-orange/20"
+                : "text-white/60 hover:bg-white/5 hover:text-white"
+            }`}
+          >
+            <Cpu size={18} />
+            Manage Services
+          </button>
+
+          <button
             onClick={() => setActiveTab("inquiries")}
             className={`flex items-center justify-between rounded-lg px-4 py-3.5 font-body text-sm font-semibold tracking-wide transition-all ${
               activeTab === "inquiries"
@@ -523,7 +668,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Statistics Cards */}
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <div
                   onClick={() => setActiveTab("portfolio")}
                   className="group cursor-pointer rounded-xl border border-white/10 bg-white/5 p-6 hover:border-shreeja-orange/30 hover:bg-white/10 transition-all duration-300"
@@ -555,6 +700,23 @@ export default function AdminDashboardPage() {
                   </div>
                   <h3 className="mt-4 font-display text-4xl font-bold tracking-tight">
                     {blogs.length}
+                  </h3>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab("services")}
+                  className="group cursor-pointer rounded-xl border border-white/10 bg-white/5 p-6 hover:border-shreeja-orange/30 hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-body text-sm font-semibold uppercase tracking-wider text-white/50 group-hover:text-white/70">
+                      Active Services
+                    </span>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-shreeja-orange/10 text-shreeja-orange group-hover:bg-shreeja-orange group-hover:text-white transition-all">
+                      <Cpu size={20} />
+                    </span>
+                  </div>
+                  <h3 className="mt-4 font-display text-4xl font-bold tracking-tight">
+                    {servicesList.length}
                   </h3>
                 </div>
 
@@ -784,7 +946,89 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* TAB 4: INQUIRIES */}
+          {/* TAB 4: SERVICES CRUD */}
+          {activeTab === "services" && (
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                  <h1 className="font-display text-3xl font-bold uppercase tracking-tight">
+                    Manage Services
+                  </h1>
+                  <p className="mt-1 font-body text-sm text-white/50">
+                    Add, edit, or delete digital agency services displayed on the website
+                  </p>
+                </div>
+                <button
+                  onClick={handleAddService}
+                  className="flex items-center justify-center gap-2 rounded-lg bg-shreeja-orange px-4 py-3 font-body text-sm font-semibold text-white shadow-md shadow-shreeja-orange/20 transition-all hover:bg-shreeja-orange-light"
+                >
+                  <Plus size={16} />
+                  Add Service
+                </button>
+              </div>
+
+              {/* Services List Grid */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {servicesList.map((service, idx) => (
+                  <div
+                    key={service.slug}
+                    className="group overflow-hidden rounded-xl border border-white/10 bg-white/5 shadow-md flex flex-col justify-between p-5 gap-4"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-shreeja-orange/10 text-shreeja-orange">
+                        <Cpu size={22} />
+                      </div>
+                      <span className="font-display text-xl font-bold text-white/20">
+                        {service.number}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="font-display text-lg font-semibold truncate text-white">
+                        {service.title}
+                      </h3>
+                      <p className="mt-1 font-body text-xs text-white/50 leading-relaxed line-clamp-2">
+                        {service.description}
+                      </p>
+                      <p className="mt-1 font-body text-[10px] text-white/40 font-mono">
+                        slug: {service.slug}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1">
+                      {service.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-white/5 border border-white/5 px-2 py-0.5 font-body text-[10px] text-white/45"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-2 border-t border-white/5 pt-4">
+                      <button
+                        onClick={() => handleEditService(idx)}
+                        className="flex flex-1 items-center justify-center gap-1.5 rounded bg-white/5 py-2 font-body text-xs font-semibold text-white hover:bg-white/10"
+                      >
+                        <Edit size={12} />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteService(idx)}
+                        className="flex flex-1 items-center justify-center gap-1.5 rounded bg-red-500/10 py-2 font-body text-xs font-semibold text-red-400 hover:bg-red-500/20"
+                      >
+                        <Trash2 size={12} />
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: INQUIRIES */}
           {activeTab === "inquiries" && (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -889,7 +1133,7 @@ export default function AdminDashboardPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-lg rounded-2xl border border-white/10 bg-shreeja-navy p-6 shadow-2xl"
+              className="w-full max-w-2xl rounded-2xl border border-white/10 bg-shreeja-navy p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between border-b border-white/5 pb-4">
                 <h3 className="font-display text-lg font-bold uppercase tracking-wider text-white">
@@ -903,7 +1147,7 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              <form onSubmit={handleSaveProject} className="mt-6 flex flex-col gap-5">
+              <form onSubmit={handleSaveProject} className="mt-6 flex flex-col gap-5 overflow-y-auto max-h-[75vh] pr-1">
                 <div className="flex flex-col gap-2">
                   <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
                     Project Title
@@ -958,6 +1202,65 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setProjectModal({ ...projectModal, image: e.target.value })}
                     className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
                   />
+                </div>
+
+                <div className="border-t border-white/5 pt-4">
+                  <h4 className="font-display text-xs font-bold uppercase tracking-widest text-shreeja-orange">
+                    Case Study Settings (Optional)
+                  </h4>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Client Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Specials Today Inc."
+                        value={projectModal.client}
+                        onChange={(e) => setProjectModal({ ...projectModal, client: e.target.value })}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Timeline
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 12 Weeks (Q1 2026)"
+                        value={projectModal.timeline}
+                        onChange={(e) => setProjectModal({ ...projectModal, timeline: e.target.value })}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 mt-4">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Challenge Statement
+                    </label>
+                    <textarea
+                      placeholder="Describe the problem, difficulties, or obstacles the client faced..."
+                      value={projectModal.challenge}
+                      onChange={(e) => setProjectModal({ ...projectModal, challenge: e.target.value })}
+                      rows={3}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2 mt-4">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Our Approach & Solution
+                    </label>
+                    <textarea
+                      placeholder="Describe the processes, designs, technologies, and strategies you implemented..."
+                      value={projectModal.approach}
+                      onChange={(e) => setProjectModal({ ...projectModal, approach: e.target.value })}
+                      rows={3}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none resize-none"
+                    />
+                  </div>
                 </div>
 
                 <div className="mt-4 flex gap-3 border-t border-white/5 pt-5 justify-end">
@@ -1114,6 +1417,154 @@ export default function AdminDashboardPage() {
                     className="rounded-lg bg-shreeja-orange px-6 py-3 font-body text-xs font-semibold text-white hover:bg-shreeja-orange-light shadow-md shadow-shreeja-orange/20"
                   >
                     Publish Article
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* --- SERVICES MODAL --- */}
+      <AnimatePresence>
+        {serviceModal.open && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-2xl rounded-2xl border border-white/10 bg-shreeja-navy p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                <h3 className="font-display text-lg font-bold uppercase tracking-wider text-white">
+                  {serviceModal.mode === "add" ? "Add New Service" : "Edit Service Settings"}
+                </h3>
+                <button
+                  onClick={() => setServiceModal({ ...serviceModal, open: false })}
+                  className="rounded-lg p-1 text-white/40 hover:bg-white/5 hover:text-white"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveService} className="mt-6 flex flex-col gap-4 overflow-y-auto max-h-[70vh] pr-1">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Service Title
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Web Development"
+                      value={serviceModal.title}
+                      onChange={(e) => setServiceModal({ ...serviceModal, title: e.target.value })}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Number identifier
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 01"
+                      value={serviceModal.number}
+                      onChange={(e) => setServiceModal({ ...serviceModal, number: e.target.value })}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Custom URL Slug (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Auto-generated if blank"
+                      value={serviceModal.slug}
+                      onChange={(e) => setServiceModal({ ...serviceModal, slug: e.target.value })}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                      Icon Name (Lucide Key)
+                    </label>
+                    <select
+                      value={serviceModal.icon}
+                      onChange={(e) => setServiceModal({ ...serviceModal, icon: e.target.value })}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white focus:border-shreeja-orange focus:outline-none [&>option]:bg-shreeja-navy"
+                    >
+                      <option value="Code2">Code2 (Web)</option>
+                      <option value="Smartphone">Smartphone (Mobile)</option>
+                      <option value="PenTool">PenTool (Design)</option>
+                      <option value="Megaphone">Megaphone (Marketing)</option>
+                      <option value="Fingerprint">Fingerprint (Branding)</option>
+                      <option value="TrendingUp">TrendingUp (SEO)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                    Brief Description
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Short summary displayed on list grids..."
+                    value={serviceModal.description}
+                    onChange={(e) => setServiceModal({ ...serviceModal, description: e.target.value })}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                    Tags (comma-separated list)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Landing Pages, E-commerce, CMS Integration"
+                    value={serviceModal.tagsString}
+                    onChange={(e) => setServiceModal({ ...serviceModal, tagsString: e.target.value })}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                    Detailed Services Pitch & Scope
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    placeholder="Detailed explanation of what the service entails, capabilities, methodologies..."
+                    value={serviceModal.detail}
+                    onChange={(e) => setServiceModal({ ...serviceModal, detail: e.target.value })}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none resize-none"
+                  />
+                </div>
+
+                <div className="mt-4 flex gap-3 border-t border-white/5 pt-5 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setServiceModal({ ...serviceModal, open: false })}
+                    className="rounded-lg border border-white/10 px-5 py-3 font-body text-xs font-semibold hover:bg-white/5"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-shreeja-orange px-6 py-3 font-body text-xs font-semibold text-white hover:bg-shreeja-orange-light shadow-md shadow-shreeja-orange/20"
+                  >
+                    Save Service
                   </button>
                 </div>
               </form>

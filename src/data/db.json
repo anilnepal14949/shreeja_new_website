@@ -69,5 +69,61 @@
       "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80"
     }
   ],
+  "services": [
+    {
+      "number": "01",
+      "slug": "web-development",
+      "icon": "Code2",
+      "title": "Web Development",
+      "description": "Responsive websites crafted for seamless experiences.",
+      "detail": "We build fast, accessible sites on modern frameworks, tuned for every screen size and built to scale as your business grows.",
+      "tags": ["Landing Pages", "E-commerce", "CMS Integration"]
+    },
+    {
+      "number": "02",
+      "slug": "mobile-app-development",
+      "icon": "Smartphone",
+      "title": "Mobile App Development",
+      "description": "Intuitive mobile apps designed for engagement and growth.",
+      "detail": "From concept to app store, we design and build native-feeling mobile experiences that keep people coming back.",
+      "tags": ["iOS", "Android", "Cross-platform"]
+    },
+    {
+      "number": "03",
+      "slug": "ui-ux-design",
+      "icon": "PenTool",
+      "title": "UI/UX Design",
+      "description": "Creative, user-focused designs that blend beauty and functionality.",
+      "detail": "Every interface starts with research into how real people will use it, then gets refined until it feels effortless.",
+      "tags": ["Wireframing", "Prototyping", "Design Systems"]
+    },
+    {
+      "number": "04",
+      "slug": "digital-marketing",
+      "icon": "Megaphone",
+      "title": "Digital Marketing",
+      "description": "Strategic campaigns that boost your brand's reach and impact.",
+      "detail": "We plan and run campaigns across the channels that matter to your audience, measured against real business goals.",
+      "tags": ["Social Media", "Paid Ads", "Content Strategy"]
+    },
+    {
+      "number": "05",
+      "slug": "branding-logo-design",
+      "icon": "Fingerprint",
+      "title": "Branding & Logo Design",
+      "description": "Create a strong and memorable brand presence.",
+      "detail": "From logo to full visual identity, we shape a brand that's instantly recognizable and consistent everywhere it shows up.",
+      "tags": ["Logo Design", "Visual Identity", "Brand Guidelines"]
+    },
+    {
+      "number": "06",
+      "slug": "seo",
+      "icon": "TrendingUp",
+      "title": "SEO",
+      "description": "Improve visibility and rank higher with smart SEO strategies.",
+      "detail": "We audit, optimize, and track performance so your site is found by the people already searching for what you offer.",
+      "tags": ["Technical SEO", "Keyword Strategy", "Analytics"]
+    }
+  ],
   "inquiries": []
 }

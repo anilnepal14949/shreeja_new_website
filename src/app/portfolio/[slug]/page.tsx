@@ -2,10 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CaseStudyClient from "@/components/CaseStudyClient";
 import { projects } from "@/utils/constants";
+import fs from "fs";
+import path from "path";
 
 type Params = Promise<{ slug: string }>;
 
 export async function generateStaticParams() {
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.projects) {
+      return db.projects.map((project: any) => ({
+        slug: project.slug,
+      }));
+    }
+  } catch {}
   return projects.map((project) => ({
     slug: project.slug,
   }));
@@ -13,7 +25,17 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  let allProjects = projects;
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.projects) {
+      allProjects = db.projects;
+    }
+  } catch {}
+
+  const project = allProjects.find((p) => p.slug === slug);
   if (!project) return {};
 
   return {
@@ -172,29 +194,42 @@ const serverCaseStudyContents: Record<
 
 export default async function PortfolioDetailPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  
+  const dbPath = path.join(process.cwd(), "src", "data", "db.json");
+  let allProjects = projects;
+  try {
+    const fileData = fs.readFileSync(dbPath, "utf-8");
+    const db = JSON.parse(fileData);
+    if (db.projects) {
+      allProjects = db.projects;
+    }
+  } catch {}
+
+  const project = allProjects.find((p) => p.slug === slug);
   
   if (!project) {
     notFound();
   }
 
+  // Generate / retrieve case study details
   const study = serverCaseStudyContents[slug] || {
-    client: "Shreeja Client",
-    timeline: "10 Weeks",
-    subhead: "delivering custom digital solutions for growth.",
-    challenge: "Establishing an online footprint and building digital assets that convert visitors into active customers.",
+    client: project.client || project.title,
+    timeline: project.timeline || "8 Weeks",
+    subhead: `delivering tailored ${project.category.toLowerCase()} solutions.`,
+    challenge: project.challenge || `The client required a modern, highly functional ${project.category.toLowerCase()} project built with best practices and speed optimizations.`,
     challengeMetrics: [
-      { label: "Baseline Speed", value: "4.5s" },
-      { label: "Target Conversions", value: "2.5%" },
-      { label: "Outlets Involved", value: "1" },
+      { label: "Performance Score", value: "98/100" },
+      { label: "SEO Grade", value: "A+" },
+      { label: "Load Velocity", value: "1.2s" },
     ],
-    approach: "Designing custom frontend mockups, setting up strict code structures, optimizing media weight files, and setting up reliable edge pipelines.",
+    approach: project.approach || "We designed dynamic custom layouts, engineered lightweight react states, optimized image caching, and set up edge routing layers.",
     solutionPoints: [
-      { title: "UX Layouts", desc: "User-focused designs engineered to convert.", iconKey: "Layout" },
-      { title: "Fast Code", desc: "Next.js core code optimizations.", iconKey: "Cpu" },
+      { title: "Optimized Stack", desc: "Built on high-performance framework structures.", iconKey: "Cpu" },
+      { title: "Visual Flow", desc: "Dynamic aesthetics crafted to captivate users.", iconKey: "Layout" },
     ],
     results: [
-      { label: "+35%", value: "Traffic Growth", desc: "Increase in organic user visits." },
+      { label: "100%", value: "Satisfaction", desc: "Project met and exceeded business expectations." },
+      { label: "2x", value: "Performance", desc: "Load speeds optimized to under 1.5 seconds." },
     ],
   };
 

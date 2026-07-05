@@ -9,7 +9,7 @@ function readDb() {
     const fileData = fs.readFileSync(dbPath, "utf-8");
     return JSON.parse(fileData);
   } catch {
-    return { projects: [], blogs: [], inquiries: [] };
+    return { projects: [], blogs: [], inquiries: [], services: [] };
   }
 }
 
@@ -36,6 +36,8 @@ export async function POST(request: Request) {
       db.projects = data;
     } else if (action === "saveBlogs") {
       db.blogs = data;
+    } else if (action === "saveServices") {
+      db.services = data;
     } else if (action === "saveInquiries") {
       db.inquiries = data;
     } else {
