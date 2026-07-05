@@ -77,7 +77,11 @@
       "title": "Web Development",
       "description": "Responsive websites crafted for seamless experiences.",
       "detail": "We build fast, accessible sites on modern frameworks, tuned for every screen size and built to scale as your business grows.",
-      "tags": ["Landing Pages", "E-commerce", "CMS Integration"]
+      "tags": ["Landing Pages", "E-commerce", "CMS Integration"],
+      "priceStarter": "$1,499",
+      "featuresStarter": ["Custom Landing Page", "3 Pages Structure", "Standard Contact Form", "Mobile Responsive Layout", "Basic SEO Optimization"],
+      "pricePro": "$3,999",
+      "featuresPro": ["Full Corporate Portal", "CMS Dynamic Content", "E-commerce System Integration", "Priority Maintenance & SLA", "Premium Animations & Interactive Design"]
     },
     {
       "number": "02",
@@ -86,7 +90,11 @@
       "title": "Mobile App Development",
       "description": "Intuitive mobile apps designed for engagement and growth.",
       "detail": "From concept to app store, we design and build native-feeling mobile experiences that keep people coming back.",
-      "tags": ["iOS", "Android", "Cross-platform"]
+      "tags": ["iOS", "Android", "Cross-platform"],
+      "priceStarter": "$2,999",
+      "featuresStarter": ["Cross-Platform App (React Native)", "Up to 5 Core Screens", "Offline Data Sync Support", "Standard Push Notifications", "App Store Submission Guide"],
+      "pricePro": "$6,999",
+      "featuresPro": ["Custom iOS & Android App", "Unlimited Screen Elements", "Secure Payments & APIs Integration", "Real-Time Chat & Geolocation", "Biometric Authentication Security"]
     },
     {
       "number": "03",
@@ -95,7 +103,11 @@
       "title": "UI/UX Design",
       "description": "Creative, user-focused designs that blend beauty and functionality.",
       "detail": "Every interface starts with research into how real people will use it, then gets refined until it feels effortless.",
-      "tags": ["Wireframing", "Prototyping", "Design Systems"]
+      "tags": ["Wireframing", "Prototyping", "Design Systems"],
+      "priceStarter": "$999",
+      "featuresStarter": ["Wireframing & Site Structures", "Figma Prototype Mockups", "Up to 4 Screens Layout", "Typography & Color Palette Guidance", "1 Revision Iteration Cycle"],
+      "pricePro": "$2,499",
+      "featuresPro": ["Interactive Dynamic Prototypes", "Full Brand Design System Components", "Tailored Custom Asset Illustrations", "User Flow Testing Reports", "Unlimited Revision Re-alignments"]
     },
     {
       "number": "04",
@@ -104,7 +116,11 @@
       "title": "Digital Marketing",
       "description": "Strategic campaigns that boost your brand's reach and impact.",
       "detail": "We plan and run campaigns across the channels that matter to your audience, measured against real business goals.",
-      "tags": ["Social Media", "Paid Ads", "Content Strategy"]
+      "tags": ["Social Media", "Paid Ads", "Content Strategy"],
+      "priceStarter": "$799/mo",
+      "featuresStarter": ["Social Media Platform Setups", "8 Static Custom Graphic Posts", "Monthly Analytics Metrics Reports", "Standard Keyword Target Tracking", "Basic Newsletter Campaign Copy"],
+      "pricePro": "$1,999/mo",
+      "featuresPro": ["Omnichannel Strategy Outlining", "Unlimited Visual Assets & Video Reels", "Paid Ads Accounts Tuning & Auditing", "A/B Conversion Testing Logic", "Weekly Progress Alignment Scrums"]
     },
     {
       "number": "05",
@@ -113,7 +129,11 @@
       "title": "Branding & Logo Design",
       "description": "Create a strong and memorable brand presence.",
       "detail": "From logo to full visual identity, we shape a brand that's instantly recognizable and consistent everywhere it shows up.",
-      "tags": ["Logo Design", "Visual Identity", "Brand Guidelines"]
+      "tags": ["Logo Design", "Visual Identity", "Brand Guidelines"],
+      "priceStarter": "$599",
+      "featuresStarter": ["3 Logo Design Direction Concepts", "High-Resolution Output Files", "Standard Visual Color Palettes", "Basic Typography Choices", "Vector Deliverable Formats"],
+      "pricePro": "$1,499",
+      "featuresPro": ["Logo & Full Corporate Identity System", "Brand Guideline Handbook Deck", "Business Card & Stationery Layouts", "Custom Font Pairing Outlines", "Full Ownership Trademark Delivers"]
     },
     {
       "number": "06",
@@ -122,7 +142,11 @@
       "title": "SEO",
       "description": "Improve visibility and rank higher with smart SEO strategies.",
       "detail": "We audit, optimize, and track performance so your site is found by the people already searching for what you offer.",
-      "tags": ["Technical SEO", "Keyword Strategy", "Analytics"]
+      "tags": ["Technical SEO", "Keyword Strategy", "Analytics"],
+      "priceStarter": "$499/mo",
+      "featuresStarter": ["Initial Technical SEO Health Audit", "5 Target High-Intent Keywords", "On-page Meta Titles & Alt Tags Setup", "Google Search Console Configuration", "Basic Competitor Metrics Tracking"],
+      "pricePro": "$1,199/mo",
+      "featuresPro": ["Deep Technical Keyword Optimization", "Link Building Campaign Blueprint", "Rich Schema Snippet Setup & Mapping", "Content Optimization Strategy Logs", "Bi-weekly Analytics Performance Reviews"]
     }
   ],
   "inquiries": []

@@ -53,6 +53,10 @@ interface Service {
   description: string;
   detail: string;
   tags: string[];
+  priceStarter?: string;
+  featuresStarter?: string[];
+  pricePro?: string;
+  featuresPro?: string[];
 }
 
 interface Inquiry {
@@ -140,6 +144,10 @@ export default function AdminDashboardPage() {
     description: string;
     detail: string;
     tagsString: string;
+    priceStarter: string;
+    featuresStarterString: string;
+    pricePro: string;
+    featuresProString: string;
   }>({
     open: false,
     mode: "add",
@@ -149,7 +157,11 @@ export default function AdminDashboardPage() {
     title: "",
     description: "",
     detail: "",
-    tagsString: ""
+    tagsString: "",
+    priceStarter: "",
+    featuresStarterString: "",
+    pricePro: "",
+    featuresProString: ""
   });
 
   const [inquiryModal, setInquiryModal] = useState<{
@@ -340,7 +352,11 @@ export default function AdminDashboardPage() {
       title: "",
       description: "",
       detail: "",
-      tagsString: ""
+      tagsString: "",
+      priceStarter: "",
+      featuresStarterString: "",
+      pricePro: "",
+      featuresProString: ""
     });
   };
 
@@ -356,7 +372,11 @@ export default function AdminDashboardPage() {
       title: s.title,
       description: s.description,
       detail: s.detail,
-      tagsString: s.tags.join(", ")
+      tagsString: s.tags.join(", "),
+      priceStarter: s.priceStarter || "",
+      featuresStarterString: s.featuresStarter ? s.featuresStarter.join(", ") : "",
+      pricePro: s.pricePro || "",
+      featuresProString: s.featuresPro ? s.featuresPro.join(", ") : ""
     });
   };
 
@@ -370,7 +390,11 @@ export default function AdminDashboardPage() {
       title: serviceModal.title,
       description: serviceModal.description,
       detail: serviceModal.detail,
-      tags: serviceModal.tagsString.split(",").map(t => t.trim()).filter(Boolean)
+      tags: serviceModal.tagsString.split(",").map(t => t.trim()).filter(Boolean),
+      priceStarter: serviceModal.priceStarter || undefined,
+      featuresStarter: serviceModal.featuresStarterString ? serviceModal.featuresStarterString.split(",").map(f => f.trim()).filter(Boolean) : undefined,
+      pricePro: serviceModal.pricePro || undefined,
+      featuresPro: serviceModal.featuresProString ? serviceModal.featuresProString.split(",").map(f => f.trim()).filter(Boolean) : undefined
     };
 
     let updatedServices = [...servicesList];
@@ -504,9 +528,9 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-shreeja-navy-dark text-white">
+    <div className="flex h-screen w-full bg-shreeja-navy-dark text-white overflow-hidden">
       {/* Sidebar Navigation */}
-      <aside className="hidden w-72 shrink-0 border-r border-white/5 bg-shreeja-navy p-8 xl:flex xl:flex-col">
+      <aside className="hidden w-72 shrink-0 border-r border-white/5 bg-shreeja-navy p-8 xl:flex xl:flex-col h-full overflow-y-auto">
         {/* Brand Header */}
         <div className="flex items-center gap-2">
           <div className="rounded-md bg-shreeja-light px-2.5 py-1.5 shadow-sm">
@@ -1536,6 +1560,67 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setServiceModal({ ...serviceModal, tagsString: e.target.value })}
                     className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
                   />
+                </div>
+
+                <div className="border-t border-white/5 pt-4">
+                  <h4 className="font-display text-xs font-bold uppercase tracking-widest text-shreeja-orange">
+                    Service Tiers & Pricing (Optional)
+                  </h4>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Starter Plan Price
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. $999/mo or Fixed"
+                        value={serviceModal.priceStarter}
+                        onChange={(e) => setServiceModal({ ...serviceModal, priceStarter: e.target.value })}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Pro Plan Price
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. $2,499/mo or Custom"
+                        value={serviceModal.pricePro}
+                        onChange={(e) => setServiceModal({ ...serviceModal, pricePro: e.target.value })}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Starter Plan Features (comma-separated)
+                      </label>
+                      <textarea
+                        placeholder="Feature A, Feature B, Feature C..."
+                        value={serviceModal.featuresStarterString}
+                        onChange={(e) => setServiceModal({ ...serviceModal, featuresStarterString: e.target.value })}
+                        rows={2}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none resize-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-body text-xs font-semibold uppercase tracking-wider text-white/50">
+                        Pro Plan Features (comma-separated)
+                      </label>
+                      <textarea
+                        placeholder="Feature A, Feature B, Feature C..."
+                        value={serviceModal.featuresProString}
+                        onChange={(e) => setServiceModal({ ...serviceModal, featuresProString: e.target.value })}
+                        rows={2}
+                        className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-white placeholder-white/20 focus:border-shreeja-orange focus:outline-none resize-none"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-2">

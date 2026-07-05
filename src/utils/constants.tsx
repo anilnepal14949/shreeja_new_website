@@ -62,6 +62,10 @@ export interface Service {
   description: string;
   detail: string;
   tags: string[];
+  priceStarter?: string;
+  featuresStarter?: string[];
+  pricePro?: string;
+  featuresPro?: string[];
 }
 
 export const services: Service[] = [

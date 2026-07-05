@@ -218,10 +218,113 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
                 </Link>
               </div>
             </div>
-            
           </div>
         </div>
       </section>
+
+      {/* 2.5 Pricing Tiers Section */}
+      {service.priceStarter && (
+        <section className="w-full bg-shreeja-navy py-24 text-white border-t border-white/5">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="font-body text-sm font-medium uppercase tracking-widest text-shreeja-orange">
+                Transparent Pricing
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold uppercase tracking-tight text-white sm:text-4xl">
+                Choose the Right Tier
+              </h2>
+              <p className="mt-2 font-body text-sm text-white/50">
+                Simple, predictable options tailored to your project scope.
+              </p>
+            </div>
+
+            <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 max-w-4xl mx-auto">
+              {/* Starter Package Card */}
+              <div className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-8 transition-all hover:border-shreeja-orange/30 hover:bg-white/10">
+                <div>
+                  <span className="font-body text-xs font-semibold uppercase tracking-widest text-white/40">
+                    Starter Package
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-2">
+                    <span className="font-display text-4xl font-bold text-white">
+                      {service.priceStarter}
+                    </span>
+                  </div>
+                  <p className="mt-4 font-body text-xs text-white/50 leading-relaxed">
+                    Perfect for startups and simple business validation projects.
+                  </p>
+                  
+                  <div className="mt-8 border-t border-white/5 pt-6">
+                    <span className="font-body text-xs font-semibold uppercase tracking-wider text-shreeja-orange">
+                      What&apos;s Included:
+                    </span>
+                    <div className="mt-4 flex flex-col gap-3">
+                      {service.featuresStarter?.map((feat: string) => (
+                        <div key={feat} className="flex items-center gap-3">
+                          <CheckCircle2 size={16} className="text-shreeja-orange shrink-0" />
+                          <span className="font-body text-xs text-white/80">{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <Link
+                    href="/contact"
+                    className="block w-full text-center rounded-lg border border-white/10 bg-white/5 py-3 font-body text-xs font-semibold text-white transition-colors hover:border-shreeja-orange hover:bg-shreeja-orange"
+                  >
+                    Select Starter Plan
+                  </Link>
+                </div>
+              </div>
+
+              {/* Pro Package Card */}
+              <div className="group relative flex flex-col justify-between rounded-2xl border-2 border-shreeja-orange bg-shreeja-navy-dark p-8 shadow-xl shadow-shreeja-orange/5">
+                <span className="absolute -top-3.5 left-8 rounded-full bg-shreeja-orange px-3 py-1 font-body text-[10px] font-bold uppercase tracking-wider text-white">
+                  Most Popular
+                </span>
+                <div>
+                  <span className="font-body text-xs font-semibold uppercase tracking-widest text-white/60">
+                    Professional Package
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-2">
+                    <span className="font-display text-4xl font-bold text-white">
+                      {service.pricePro}
+                    </span>
+                  </div>
+                  <p className="mt-4 font-body text-xs text-white/50 leading-relaxed">
+                    Designed for growing businesses requiring custom integrations and scale.
+                  </p>
+
+                  <div className="mt-8 border-t border-white/5 pt-6">
+                    <span className="font-body text-xs font-semibold uppercase tracking-wider text-shreeja-orange">
+                      What&apos;s Included:
+                    </span>
+                    <div className="mt-4 flex flex-col gap-3">
+                      {service.featuresPro?.map((feat: string) => (
+                        <div key={feat} className="flex items-center gap-3">
+                          <CheckCircle2 size={16} className="text-shreeja-orange shrink-0" />
+                          <span className="font-body text-xs text-white/80">{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <Link
+                    href="/contact"
+                    className="block w-full text-center rounded-lg bg-shreeja-orange py-3 font-body text-xs font-semibold text-white transition-colors hover:bg-shreeja-orange-light shadow-md shadow-shreeja-orange/20"
+                  >
+                    Select Professional Plan
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 3. Case Studies Teaser (Light Theme) */}
       <section className="w-full bg-shreeja-light py-24 text-shreeja-navy">
