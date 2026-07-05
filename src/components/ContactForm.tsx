@@ -14,15 +14,33 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus("sending");
 
-    // Simulate an API network request for premium interactive feel
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // Secondary fallback: open mail client in background
-      const subject = encodeURIComponent(`New project inquiry from ${name}`);
-      const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-      window.location.href = `mailto:contact@shreejadigital.com?subject=${subject}&body=${body}`;
-      
+      // 1. Sync to client LocalStorage for instant dynamic browser demo
+      const localInquiriesRaw = localStorage.getItem("shreeja_inquiries") || "[]";
+      const localInquiries = JSON.parse(localInquiriesRaw);
+      const newInquiry = {
+        id: Math.random().toString(36).substring(2, 9),
+        name,
+        email,
+        message,
+        service: "General Inquiry",
+        date: new Date().toISOString(),
+        read: false
+      };
+      localStorage.setItem("shreeja_inquiries", JSON.stringify([newInquiry, ...localInquiries]));
+
+      // 2. Post to backend REST API route handler
+      await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          service: "General Inquiry"
+        })
+      });
+
       setStatus("success");
       setName("");
       setEmail("");

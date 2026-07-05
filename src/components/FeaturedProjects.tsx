@@ -11,6 +11,15 @@ export default function FeaturedProjects() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [items, setItems] = useState<typeof projects>(projects);
+
+  useEffect(() => {
+    const localProjects = localStorage.getItem("shreeja_projects");
+    if (localProjects) {
+      const parsed = JSON.parse(localProjects) as typeof projects;
+      setTimeout(() => setItems(parsed), 0);
+    }
+  }, []);
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -92,7 +101,7 @@ export default function FeaturedProjects() {
           className="no-scrollbar mt-12 flex gap-6 overflow-x-auto scroll-smooth pb-6 snap-x snap-mandatory"
           style={{ scrollbarWidth: "none" }}
         >
-          {projects.map((project, i) => (
+          {items.map((project, i) => (
             <motion.div
               key={project.title}
               initial={{ opacity: 0, y: 30 }}

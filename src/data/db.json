@@ -1,0 +1,73 @@
+{
+  "projects": [
+    {
+      "title": "Specials Today",
+      "slug": "specials-today",
+      "category": "Web App Development",
+      "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
+      "href": "/portfolio/specials-today"
+    },
+    {
+      "title": "Centrum Academy",
+      "slug": "centrum-academy",
+      "category": "Education Platform",
+      "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80",
+      "href": "/portfolio/centrum-academy"
+    },
+    {
+      "title": "Meridian Studio",
+      "slug": "meridian-studio",
+      "category": "Architecture & Design",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+      "href": "/portfolio/meridian-studio"
+    },
+    {
+      "title": "Urban Threads",
+      "slug": "urban-threads",
+      "category": "E-Commerce",
+      "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
+      "href": "/portfolio/urban-threads"
+    },
+    {
+      "title": "GrowthLab",
+      "slug": "growthlab",
+      "category": "Analytics Platform",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+      "href": "/portfolio/growthlab"
+    },
+    {
+      "title": "Pumpkin Store",
+      "slug": "pumpkin-store",
+      "category": "Retail E-Commerce",
+      "image": "https://images.unsplash.com/photo-1506869642237-a7be94709855?w=800&q=80",
+      "href": "/portfolio/pumpkin-store"
+    }
+  ],
+  "blogs": [
+    {
+      "title": "Why Next.js is the Ultimate Framework for SEO-Rich Websites",
+      "slug": "nextjs-seo-ultimate-framework",
+      "excerpt": "Discover how Next.js features like static rendering, server components, and image optimizations help agencies rank higher.",
+      "date": "July 2026",
+      "readTime": "5 min read",
+      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80"
+    },
+    {
+      "title": "10 Key UI/UX Principles to Maximize Landing Page Conversions",
+      "slug": "ui-ux-conversion-principles",
+      "excerpt": "Visual hierarchy, responsive grid structures, and clear calls-to-action can turn casual scroll behavior into qualified business leads.",
+      "date": "June 2026",
+      "readTime": "7 min read",
+      "image": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=600&q=80"
+    },
+    {
+      "title": "Mobile App Development: Cross-Platform vs Native Solutions",
+      "slug": "mobile-app-crossplatform-vs-native",
+      "excerpt": "Compare React Native, Flutter, and Swift/Kotlin approaches to select the ideal timeline and budget strategy for your business mobile launch.",
+      "date": "May 2026",
+      "readTime": "6 min read",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80"
+    }
+  ],
+  "inquiries": []
+}
