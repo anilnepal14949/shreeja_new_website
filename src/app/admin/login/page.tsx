@@ -22,24 +22,29 @@ export default function AdminLoginPage() {
     }
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Read secure overrides from env via public constants if compiled, or default to standard credentials
-    const targetUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
-    const targetPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
-
-    setTimeout(() => {
-      if (username === targetUser && password === targetPass) {
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
         localStorage.setItem("shreeja_admin_logged_in", "true");
         router.push("/admin");
       } else {
-        setError("Invalid username or password configuration.");
+        setError(data.error || "Invalid username or password configuration.");
         setLoading(false);
       }
-    }, 800);
+    } catch (err) {
+      setError("Server connection failed. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
