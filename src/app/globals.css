@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  /* Shreeja brand colors */
+  --shreeja-orange: #ff6b35;
+  --shreeja-orange-light: #ff8c5a;
+  --shreeja-navy: #001f3f;
+  --shreeja-navy-dark: #000b1a;
+  --shreeja-light: #f5f5f5;
+  --shreeja-dark: #1a1a1a;
+  --shreeja-cyan: #06b6d4;
+
+  /* Animation timing */
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+  --easing-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --easing-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@theme inline {
+  --color-shreeja-orange: var(--shreeja-orange);
+  --color-shreeja-orange-light: var(--shreeja-orange-light);
+  --color-shreeja-navy: var(--shreeja-navy);
+  --color-shreeja-navy-dark: var(--shreeja-navy-dark);
+  --color-shreeja-light: var(--shreeja-light);
+  --color-shreeja-dark: var(--shreeja-dark);
+  --color-shreeja-cyan: var(--shreeja-cyan);
+
+  --font-display: var(--font-display), sans-serif;
+  --font-body: var(--font-primary), sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.6s ease-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  background: var(--shreeja-light);
+  color: var(--shreeja-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
