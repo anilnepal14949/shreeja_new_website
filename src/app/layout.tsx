@@ -31,6 +31,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${poppins.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen font-body bg-shreeja-light text-shreeja-dark">
         <SmoothScrollProvider>
