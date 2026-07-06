@@ -14,6 +14,7 @@ export function useParallax(
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
+    layoutEffect: false,
   });
 
   const range = 400 * speed;

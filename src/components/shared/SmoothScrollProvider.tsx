@@ -46,11 +46,6 @@ export default function SmoothScrollProvider({
 
   // Reset scroll and refresh ScrollTrigger coordinates on page transitions
   useEffect(() => {
-    // Kill and revert all active triggers before components unmount
-    ScrollTrigger.getAll().forEach((trigger) => {
-      trigger.kill(true);
-    });
-
     // Disable native browser scroll restoration conflicts
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
